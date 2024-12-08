@@ -3,7 +3,7 @@ export interface RequestParams {
     per_page?: number;
 }
 
-export interface Post {
+export interface Posts {
     id: number;
     date: string;
     title: {

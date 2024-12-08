@@ -23,7 +23,7 @@ export class ApiElements {
     }
 
    
-    async getPosts(params?: RequestParams): Promise<Post[]> {
+    async getPosts(params?: RequestParams): Promise<Posts[]> {
         const response = await this.fillingRequest(params);
         
         if (!response.ok()) {
@@ -42,7 +42,7 @@ export class ApiElements {
     }
 
    
-    static validatePostStructure(post: Post): boolean {
+    static validatePostStructure(post: Posts): boolean {
         return (
             typeof post.id === 'number' &&
             typeof post.date === 'string' &&
