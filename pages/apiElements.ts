@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
 import { CONFIG } from '../config';
-import { RequestParams, Post } from '../types/api.types';
+import { RequestParams, Post, Pages} from '../types/api.types';
 
 export class ApiElements {
     private readonly request: APIRequestContext;
@@ -11,7 +11,13 @@ export class ApiElements {
 
    
     async fillingRequest(params?: RequestParams): Promise<APIResponse> {
-        return await this.request.get(CONFIG.apiPath, {
+        return await this.request.get(CONFIG.apiPathPosts, {
+            params,
+        });
+    }
+
+    async fillingRequestForPages(params?: RequestParams): Promise<APIResponse> {
+        return await this.request.get(CONFIG.apiPathPages, {
             params,
         });
     }
@@ -27,6 +33,14 @@ export class ApiElements {
         return response.json();
     }
 
+    async getPages(params?: RequestParams): Promise<Pages[]> {
+        const response = await this.fillingRequest(params);
+
+        if (!response.ok()) {
+            throw new Error(`API request failed with status ${response.status()}`);
+        }
+    }
+
    
     static validatePostStructure(post: Post): boolean {
         return (
@@ -35,6 +49,16 @@ export class ApiElements {
             typeof post.title?.rendered === 'string' &&
             typeof post.content?.rendered === 'string' &&
             new Date(post.date).toString() !== 'Invalid Date'
+        );
+    }
+
+    static validatePagesStructure(page: Pages): boolean {
+        return (
+            typeof page.id === 'number' &&
+            typeof page.date === 'string' &&
+            typeof page.title?.rendered === 'string' &&
+            typeof page.content?.rendered === 'string' &&
+            typeof page.guid?.rendered === 'string'
         );
     }
 

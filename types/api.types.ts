@@ -13,3 +13,17 @@ export interface Post {
         rendered: string;
     };
 }
+
+export interface Pages {
+    id: number;
+    date: string;
+    title: {
+        rendered: string;
+    };
+    content: {
+        rendered: string;
+    };
+    guid: {
+        rendered: string;
+    };
+}

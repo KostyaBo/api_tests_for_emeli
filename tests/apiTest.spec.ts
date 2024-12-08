@@ -34,6 +34,22 @@ test.describe('WordPress API Tests', () => {
         }
     });
 
+    test('should verify pages pagination and data structure', async () => {
+        const params = {
+            page: 1,
+            per_page: 5
+        };
+
+        const pages = await apiElements.getPosts(params);
+        
+        expect(Array.isArray(pages)).toBeTruthy();
+        expect(pages.length).toBeLessThanOrEqual(params.per_page);
+        
+        for (const page of pages) {
+            expect(ApiElements.validatePagesStructure(page)).toBeTruthy();
+        }
+    });
+
     test('should return 400 status for invalid pagination parameters', async () => {
         const invalidParams = {
             page: -1,
