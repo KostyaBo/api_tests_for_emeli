@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
 import { CONFIG } from '../config';
-import { RequestParams, Post, Pages} from '../types/api.types';
+import { RequestParams, Posts, Pages} from '../types/api.types';
 
 export class ApiElements {
     private readonly request: APIRequestContext;
