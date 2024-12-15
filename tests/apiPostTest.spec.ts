@@ -115,7 +115,13 @@ test.describe('WordPress API Post Creation with Validation', () => {
     });
 
     const responseTime = Date.now() - startTime;
-    expect(responseTime).toBeLessThan(PERFORMANCE_TIMEOUT);
+
+    try {
+      expect(responseTime).toBeLessThan(PERFORMANCE_TIMEOUT);
+  } catch (error) {
+      console.error(`Response time exceeded. Limit: ${PERFORMANCE_TIMEOUT}ms, Actual: ${responseTime}ms`);
+      throw error;
+  }
 
     expect(response.status()).toBe(201);
 
@@ -157,6 +163,7 @@ test.describe('WordPress API Post Creation with Validation', () => {
     expect(responseData.title.rendered).toBe(postData.title);
     expect(responseData.content.rendered).toContain(postData.content);
     expect(responseData.status).toBe(postData.status);
+    expect(responseData.ping_status).toBe(postData.ping_status);
 
     const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
     expect(responseData.date).toMatch(dateRegex);
@@ -176,7 +183,7 @@ test.describe('WordPress API Post Creation with Validation', () => {
   });
 
   test('should handle performance degradation', async ({ request }) => {
-    const iterations = 3;
+    const iterations = 4;
     const responseTimes: number[] = [];
 
     for (let i = 0; i < iterations; i++) {
@@ -204,7 +211,19 @@ test.describe('WordPress API Post Creation with Validation', () => {
     const averageTime = responseTimes.reduce((a, b) => a + b) / iterations;
     const maxDeviation = Math.max(...responseTimes) - Math.min(...responseTimes);
     
-    expect(maxDeviation).toBeLessThan(PERFORMANCE_TIMEOUT / 2);
-    expect(averageTime).toBeLessThan(PERFORMANCE_TIMEOUT);
+    try {
+      expect(maxDeviation).toBeLessThan(PERFORMANCE_TIMEOUT / 2);
+  } catch (error) {
+      console.error(`Deviation exceeded limit. Limit: ${PERFORMANCE_TIMEOUT / 2}ms, Actual: ${maxDeviation}ms. Error:`, error);
+      throw error;
+  }
+  
+  try {
+      expect(averageTime).toBeLessThan(PERFORMANCE_TIMEOUT);
+  } catch (error) {
+      console.error(`Average time exceeded limit. Limit: ${PERFORMANCE_TIMEOUT}ms, Actual: ${averageTime}ms. Error:`, error);
+      throw error;
+  }
+  
   });
 });
