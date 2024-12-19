@@ -26,6 +26,9 @@ interface WordPressPost {
     ping_status: string;
     template: string;
     meta: object;
+    categories: number[]; 
+    tags: number[]; 
+    class_list: string[]; 
   }
 
   test.describe ('WordPress API Put with Validation', () => {
@@ -33,7 +36,7 @@ interface WordPressPost {
     const credentials = Buffer.from('admin:Engineer_123').toString('base64');
     const PERFORMANCE_TIMEOUT = 3000;
 
-test('Edit title Content Status', async ({request})=> {
+test('Edit Title Content Status in prev created post', async ({request})=> {
     const postID = 14742;
     const updateData = {
         title: 'New Update Title',
@@ -63,7 +66,10 @@ const response = await request.put(`${baseUrl}/posts/${postID}`, {
         rendered: expect.stringContaining(updateData.content),
         protected: false
       }),
-      status: updateData.status
+      status: updateData.status,
+      categories: expect.arrayContaining([1]),
+      tags: expect.arrayContaining([]),
+      class_list: expect.arrayContaining(['post-14742', 'post'])
     })
   )
 
