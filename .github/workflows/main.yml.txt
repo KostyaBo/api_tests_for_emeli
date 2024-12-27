@@ -1,0 +1,40 @@
+name: Run Playwright Tests
+
+on:
+  push:
+    branches:
+      - main  # Запускать при изменениях в ветке main
+  pull_request:
+    branches:
+      - main  # Запускать при создании PR в ветку main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Указываем, что тесты будут выполняться на последней версии Ubuntu
+
+    steps:
+    # Шаг 1: Проверяем репозиторий
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Шаг 2: Устанавливаем Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Указываем версию Node.js, которую используете
+
+    # Шаг 3: Устанавливаем зависимости
+    - name: Install dependencies
+      run: |
+        npm install  # Устанавливаем зависимости из package.json
+
+    # Шаг 4: Компилируем TypeScript, если нужно
+    - name: Compile TypeScript
+      run: |
+        npx tsc  # Компилируем TypeScript в JavaScript (если у вас настроен tsconfig.json)
+
+    # Шаг 5: Запускаем тесты
+    - name: Run Playwright tests
+      run: |
+        npx playwright install --with-deps  # Устанавливаем зависимости для Playwright (браузеры и другие зависимости)
+        npx playwright test  # Запускаем тесты Playwright
