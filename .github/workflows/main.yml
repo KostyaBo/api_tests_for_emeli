@@ -28,13 +28,13 @@ jobs:
       run: |
         npm install  # Устанавливаем зависимости из package.json
 
-    # Шаг 4: Компилируем TypeScript, если нужно
-    - name: Compile TypeScript
-      run: |
-        npx tsc  # Компилируем TypeScript в JavaScript (если у вас настроен tsconfig.json)
+    # # Шаг 4: Компилируем TypeScript, если нужно
+    # - name: Compile TypeScript
+    #   run: |
+    #     npx tsc  # Компилируем TypeScript в JavaScript (если у вас настроен tsconfig.json)
 
     # Шаг 5: Запускаем тесты
     - name: Run Playwright tests
       run: |
-        npx playwright install --with-deps  # Устанавливаем зависимости для Playwright (браузеры и другие зависимости)
-        npx playwright test  # Запускаем тесты Playwright
+        npx playwright install --with-deps
+        npx playwright test
