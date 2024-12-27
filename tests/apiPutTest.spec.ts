@@ -33,7 +33,7 @@ interface WordPressPost {
 
   test.describe ('WordPress API Put with Validation', () => {
     const baseUrl = 'https://dev.emeli.in.ua/wp-json/wp/v2';
-    const credentials = Buffer.from('admin:Engineer_123').toString('base64');
+    const credentials = Buffer.from('admin:Engineer_secret').toString('base64');
     const PERFORMANCE_TIMEOUT = 3000;
 
 test('Edit Title Content Status in prev created post', async ({request})=> {
@@ -54,26 +54,44 @@ const response = await request.put(`${baseUrl}/posts/${postID}`, {
 
   const responseData = await response.json() as WordPressPost;
 
-  expect(responseData).toEqual(
-    expect.objectContaining({
-      id: postID, 
-      title: expect.objectContaining({
-        raw: updateData.title,
-        rendered: expect.stringContaining(updateData.title)
-      }),
-      content: expect.objectContaining({
-        raw: updateData.content,
-        rendered: expect.stringContaining(updateData.content),
-        protected: false
-      }),
-      status: updateData.status,
-      categories: expect.arrayContaining([1]),
-      tags: expect.arrayContaining([]),
-      class_list: expect.arrayContaining(['post-14742', 'post'])
-    })
-  )
+  try {
+    expect(responseData.categories).toEqual(expect.arrayContaining([1]));
+} catch (error) {
+    console.error('Error in categories validation:', error);
+    throw error; 
+}
 
-  console.log(`Post ${postID} updated successfully`)
+try {
+    expect(responseData.tags).toEqual(expect.arrayContaining([]));
+} catch (error) {
+    console.error('Error in tags validation:', error);
+    throw error;
+}
+
+try {
+    expect(responseData.class_list).toEqual(expect.arrayContaining(['post-14742', 'post']));
+} catch (error) {
+    console.error('Error in class_list validation:', error);
+    throw error;
+}
+
+expect(responseData).toEqual(
+    expect.objectContaining({
+        id: postID,
+        title: expect.objectContaining({
+            raw: updateData.title,
+            rendered: expect.stringContaining(updateData.title),
+        }),
+        content: expect.objectContaining({
+            raw: updateData.content,
+            rendered: expect.stringContaining(updateData.content),
+            protected: false,
+        }),
+        status: updateData.status,
+    })
+);
+
+console.log(`Post ${postID} updated successfully`);
 
 })
 })
