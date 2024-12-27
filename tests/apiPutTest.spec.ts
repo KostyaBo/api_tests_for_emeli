@@ -33,7 +33,7 @@ interface WordPressPost {
 
   test.describe ('WordPress API Put with Validation', () => {
     const baseUrl = 'https://dev.emeli.in.ua/wp-json/wp/v2';
-    const credentials = Buffer.from('admin:Engineer_secret').toString('base64');
+    const credentials = Buffer.from('admin:Engineer_123').toString('base64');
     const PERFORMANCE_TIMEOUT = 3000;
 
 test('Edit Title Content Status in prev created post', async ({request})=> {
